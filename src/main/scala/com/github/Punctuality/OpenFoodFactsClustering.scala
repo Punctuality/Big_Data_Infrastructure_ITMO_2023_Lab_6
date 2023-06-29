@@ -17,17 +17,13 @@ import scala.util.Try
 object OpenFoodFactsClustering extends LazyLogging {
 
   def main(args: Array[String]): Unit = {
-    val spark = SparkSession.builder.appName("TestSparkConnection")
+    val spark = SparkSession.builder.appName("OpenFoodFactsClustering")
       .master("spark://spark-master:7077")
-      .config("spark.sql.caseSensitive", "true")
       .getOrCreate()
 
     val namenodeAddress = args.head
-    spark.sparkContext.addArchive(s"hdfs://$namenodeAddress/openfoodfacts.zip")
 
-    val downloadedArchive = SparkFiles.get("openfoodfacts.zip")
-
-    val rdd = spark.sparkContext.textFile(s"$downloadedArchive/openfoodfacts.jsonl")
+    val rdd = spark.sparkContext.textFile(s"hdfs://$namenodeAddress/openfoodfacts.jsonl")
     val jsonRDD = rdd.flatMap(str => Try(parse(str)).toOption)
     val sugarEnergyRDD: RDD[SugarEnergy] = jsonRDD.flatMap(json => Try(json.as[SugarEnergy]).toOption).cache()
 
