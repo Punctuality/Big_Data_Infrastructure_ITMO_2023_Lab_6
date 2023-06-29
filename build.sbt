@@ -7,7 +7,7 @@ ThisBuild / scalaVersion := "2.12.14"
 
 lazy val root = (project in file("."))
   .settings(
-    name := "Lab_5",
+    name := "Lab_6",
     libraryDependencies ++= Seq(
 //      Spark dependency
       "org.apache.spark" %% "spark-core" % "3.3.0" % "provided",
